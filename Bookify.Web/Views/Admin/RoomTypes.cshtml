@@ -1,0 +1,57 @@
+@model IEnumerable<Bookify.Data.Models.RoomType>
+@{
+    ViewData["Title"] = "Manage Room Types";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Room Types</h2>
+        <a asp-action="CreateRoomType" class="btn btn-primary">Add New Room Type</a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped" id="roomTypesTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price/Night</th>
+                    <th>Max Occupancy</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var roomType in Model)
+                {
+                    <tr>
+                        <td>@roomType.Name</td>
+                        <td>@(roomType.Description ?? "-")</td>
+                        <td>$@roomType.PricePerNight.ToString("F2")</td>
+                        <td>@roomType.MaxOccupancy</td>
+                        <td>
+                            <span class="badge bg-@(roomType.IsActive ? "success" : "danger")">
+                                @(roomType.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td>
+                            <a asp-action="EditRoomType" asp-route-id="@roomType.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-action="DeleteRoomType" asp-route-id="@roomType.Id" method="post" class="d-inline" 
+                                  onsubmit="return confirm('Are you sure you want to delete this room type?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#roomTypesTable').DataTable();
+        });
+    </script>
+}

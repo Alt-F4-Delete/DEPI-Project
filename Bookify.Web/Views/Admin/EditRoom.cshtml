@@ -1,0 +1,52 @@
+@model Bookify.Web.Models.RoomViewModel
+@{
+    ViewData["Title"] = "Edit Room";
+}
+
+<div class="container">
+    <h2 class="mb-4">Edit Room</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="EditRoom" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="RoomNumber" class="form-label"></label>
+                    <input asp-for="RoomNumber" class="form-control" />
+                    <span asp-validation-for="RoomNumber" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="RoomTypeId" class="form-label"></label>
+                    <select asp-for="RoomTypeId" asp-items="ViewBag.RoomTypes" class="form-select">
+                        <option value="">-- Select Room Type --</option>
+                    </select>
+                    <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input asp-for="IsAvailable" class="form-check-input" />
+                    <label asp-for="IsAvailable" class="form-check-label"></label>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Update Room</button>
+                    <a asp-action="Rooms" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

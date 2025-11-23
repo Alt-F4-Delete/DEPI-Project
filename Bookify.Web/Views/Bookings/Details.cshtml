@@ -1,0 +1,73 @@
+@model Bookify.Data.Models.Booking
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container">
+    <h2 class="mb-4">Booking Details</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Booking #@Model.Id</h4>
+                    <hr>
+                    <dl class="row">
+                        <dt class="col-sm-4">Room:</dt>
+                        <dd class="col-sm-8">@Model.Room.RoomType.Name - @Model.Room.RoomNumber</dd>
+                        
+                        <dt class="col-sm-4">Check-in Date:</dt>
+                        <dd class="col-sm-8">@Model.CheckInDate.ToString("MM/dd/yyyy")</dd>
+                        
+                        <dt class="col-sm-4">Check-out Date:</dt>
+                        <dd class="col-sm-8">@Model.CheckOutDate.ToString("MM/dd/yyyy")</dd>
+                        
+                        <dt class="col-sm-4">Number of Nights:</dt>
+                        <dd class="col-sm-8">@((Model.CheckOutDate - Model.CheckInDate).Days)</dd>
+                        
+                        <dt class="col-sm-4">Total Price:</dt>
+                        <dd class="col-sm-8"><strong>$@Model.TotalPrice.ToString("F2")</strong></dd>
+                        
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.Status == "Confirmed" ? "success" : Model.Status == "Cancelled" ? "danger" : "warning")">
+                                @Model.Status
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-4">Booking Date:</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("MM/dd/yyyy HH:mm")</dd>
+                        
+                        @if (Model.ConfirmedAt.HasValue)
+                        {
+                            <dt class="col-sm-4">Confirmed At:</dt>
+                            <dd class="col-sm-8">@Model.ConfirmedAt.Value.ToString("MM/dd/yyyy HH:mm")</dd>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.SpecialRequests))
+                        {
+                            <dt class="col-sm-4">Special Requests:</dt>
+                            <dd class="col-sm-8">@Model.SpecialRequests</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Actions</h5>
+                    @if (Model.Status == "Pending" || Model.Status == "Confirmed")
+                    {
+                        <form asp-action="Cancel" asp-route-id="@Model.Id" method="post" 
+                              onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                            <button type="submit" class="btn btn-danger w-100 mb-2">Cancel Booking</button>
+                        </form>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary w-100">Back to Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

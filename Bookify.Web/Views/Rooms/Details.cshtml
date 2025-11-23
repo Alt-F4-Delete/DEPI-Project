@@ -1,0 +1,83 @@
+@model Bookify.Data.Models.Room
+@{
+    ViewData["Title"] = "Room Details";
+    var checkIn = ViewBag.CheckIn as DateTime?;
+    var checkOut = ViewBag.CheckOut as DateTime?;
+    var isAvailable = ViewBag.IsAvailable as bool?;
+    var totalPrice = ViewBag.TotalPrice as decimal?;
+}
+
+<div class="container">
+    <h2 class="mb-4">Room Details</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">@Model.RoomType.Name - Room @Model.RoomNumber</h3>
+                    <p class="card-text">@Model.RoomType.Description</p>
+                    <hr>
+                    <p><strong>Room Number:</strong> @Model.RoomNumber</p>
+                    <p><strong>Room Type:</strong> @Model.RoomType.Name</p>
+                    <p><strong>Price per Night:</strong> $@Model.RoomType.PricePerNight.ToString("F2")</p>
+                    <p><strong>Max Occupancy:</strong> @Model.RoomType.MaxOccupancy guests</p>
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <p><strong>Notes:</strong> @Model.Notes</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Booking Information</h5>
+                    @if (checkIn.HasValue && checkOut.HasValue)
+                    {
+                        <p><strong>Check-in:</strong> @checkIn.Value.ToString("MM/dd/yyyy")</p>
+                        <p><strong>Check-out:</strong> @checkOut.Value.ToString("MM/dd/yyyy")</p>
+                        <p><strong>Nights:</strong> @((checkOut.Value - checkIn.Value).Days)</p>
+                        @if (totalPrice.HasValue)
+                        {
+                            <hr>
+                            <h4>Total: $@totalPrice.Value.ToString("F2")</h4>
+                        }
+                        
+                        @if (isAvailable == true)
+                        {
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post" class="mt-3">
+                                <input type="hidden" name="roomId" value="@Model.Id" />
+                                <input type="hidden" name="checkIn" value="@checkIn.Value.ToString("yyyy-MM-dd")" />
+                                <input type="hidden" name="checkOut" value="@checkOut.Value.ToString("yyyy-MM-dd")" />
+                                @if (User.Identity?.IsAuthenticated == true)
+                                {
+                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary w-100">Login to Book</a>
+                                }
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mt-3">
+                                This room is not available for the selected dates.
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Please select dates to see availability and pricing.</p>
+                        <a asp-action="Index" class="btn btn-primary w-100">Search Rooms</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Back to Rooms</a>
+    </div>
+</div>
+

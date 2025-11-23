@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Home - Bookify Hotel";
+}
+
+<div class="hero-section bg-primary text-white text-center py-5 mb-5 rounded">
+    <div class="container">
+        <h1 class="display-4 mb-4">Welcome to Bookify Hotel</h1>
+        <p class="lead mb-4">Your perfect stay awaits. Book your room today!</p>
+        <a asp-controller="Rooms" asp-action="Index" class="btn btn-light btn-lg">Browse Rooms</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Comfortable Rooms</h5>
+                    <p class="card-text">Experience luxury and comfort in our well-appointed rooms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Best Prices</h5>
+                    <p class="card-text">Competitive rates for all room types. Book now and save!</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Easy Booking</h5>
+                    <p class="card-text">Simple and secure online booking process with instant confirmation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+}

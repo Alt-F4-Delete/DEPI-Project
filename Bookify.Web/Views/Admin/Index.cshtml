@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container">
+    <h2 class="mb-4">Admin Dashboard</h2>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Rooms</h5>
+                    <p class="card-text">View and manage all hotel rooms.</p>
+                    <a asp-action="Rooms" class="btn btn-primary">Manage Rooms</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Room Types</h5>
+                    <p class="card-text">View and manage room types and pricing.</p>
+                    <a asp-action="RoomTypes" class="btn btn-primary">Manage Room Types</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">View All Bookings</h5>
+                    <p class="card-text">View and manage all customer bookings.</p>
+                    <a asp-action="Bookings" class="btn btn-primary">View Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

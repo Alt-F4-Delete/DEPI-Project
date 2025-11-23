@@ -1,0 +1,70 @@
+@model IEnumerable<Bookify.Data.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container">
+    <h2 class="mb-4">My Bookings</h2>
+    
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped" id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Total Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>@booking.Room.RoomType.Name - @booking.Room.RoomNumber</td>
+                            <td>@booking.CheckInDate.ToString("MM/dd/yyyy")</td>
+                            <td>@booking.CheckOutDate.ToString("MM/dd/yyyy")</td>
+                            <td>$@booking.TotalPrice.ToString("F2")</td>
+                            <td>
+                                <span class="badge bg-@(booking.Status == "Confirmed" ? "success" : booking.Status == "Cancelled" ? "danger" : "warning")">
+                                    @booking.Status
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-sm btn-info">View</a>
+                                @if (booking.Status == "Pending" || booking.Status == "Confirmed")
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@booking.Id" method="post" class="d-inline" 
+                                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h4>No bookings found</h4>
+            <p>You haven't made any bookings yet. <a asp-controller="Rooms" asp-action="Index">Browse our rooms</a> to get started!</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#bookingsTable').DataTable({
+                order: [[1, 'desc']] // Sort by check-in date descending
+            });
+        });
+    </script>
+}
+

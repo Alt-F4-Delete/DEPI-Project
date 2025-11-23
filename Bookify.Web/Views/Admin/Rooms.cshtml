@@ -1,0 +1,57 @@
+@model IEnumerable<Bookify.Data.Models.Room>
+@{
+    ViewData["Title"] = "Manage Rooms";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Rooms</h2>
+        <a asp-action="CreateRoom" class="btn btn-primary">Add New Room</a>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-striped" id="roomsTable">
+            <thead>
+                <tr>
+                    <th>Room Number</th>
+                    <th>Room Type</th>
+                    <th>Price/Night</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model)
+                {
+                    <tr>
+                        <td>@room.RoomNumber</td>
+                        <td>@room.RoomType.Name</td>
+                        <td>$@room.RoomType.PricePerNight.ToString("F2")</td>
+                        <td>
+                            <span class="badge bg-@(room.IsAvailable ? "success" : "danger")">
+                                @(room.IsAvailable ? "Available" : "Unavailable")
+                            </span>
+                        </td>
+                        <td>@(room.Notes ?? "-")</td>
+                        <td>
+                            <a asp-action="EditRoom" asp-route-id="@room.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <form asp-action="DeleteRoom" asp-route-id="@room.Id" method="post" class="d-inline" 
+                                  onsubmit="return confirm('Are you sure you want to delete this room?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#roomsTable').DataTable();
+        });
+    </script>
+}

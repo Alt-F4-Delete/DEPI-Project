@@ -1,0 +1,85 @@
+@model IEnumerable<Bookify.Data.Models.Room>
+@{
+    ViewData["Title"] = "Available Rooms";
+    var roomTypes = ViewBag.RoomTypes as IEnumerable<Bookify.Data.Models.RoomType> ?? new List<Bookify.Data.Models.RoomType>();
+    var checkIn = ViewBag.CheckIn as DateTime?;
+    var checkOut = ViewBag.CheckOut as DateTime?;
+    var selectedRoomTypeId = ViewBag.SelectedRoomTypeId as int?;
+}
+
+<div class="container">
+    <h2 class="mb-4">Available Rooms</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="checkIn" class="form-label">Check-in Date</label>
+                    <input type="date" class="form-control" id="checkIn" name="checkIn" 
+                           value="@(checkIn?.ToString("yyyy-MM-dd") ?? DateTime.Today.ToString("yyyy-MM-dd"))" 
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="checkOut" class="form-label">Check-out Date</label>
+                    <input type="date" class="form-control" id="checkOut" name="checkOut" 
+                           value="@(checkOut?.ToString("yyyy-MM-dd") ?? DateTime.Today.AddDays(1).ToString("yyyy-MM-dd"))" 
+                           min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="roomTypeId" class="form-label">Room Type</label>
+                    <select class="form-select" id="roomTypeId" name="roomTypeId">
+                        <option value="">All Types</option>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.Id" selected="@(selectedRoomTypeId == type.Id)">@type.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (checkIn.HasValue && checkOut.HasValue)
+    {
+        @if (Model.Any())
+        {
+            <div class="row">
+                @foreach (var room in Model)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@room.RoomType.Name - @room.RoomNumber</h5>
+                                <p class="card-text">@room.RoomType.Description</p>
+                                <p class="card-text">
+                                    <strong>Price:</strong> $@room.RoomType.PricePerNight.ToString("F2")/night<br>
+                                    <strong>Max Occupancy:</strong> @room.RoomType.MaxOccupancy
+                                </p>
+                                <a asp-action="Details" asp-route-id="@room.Id" 
+                                   asp-route-checkIn="@checkIn.Value.ToString("yyyy-MM-dd")" 
+                                   asp-route-checkOut="@checkOut.Value.ToString("yyyy-MM-dd")" 
+                                   class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                No rooms available for the selected dates. Please try different dates.
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Please select check-in and check-out dates to search for available rooms.
+        </div>
+    }
+</div>
+
